@@ -1,0 +1,27 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+credentials*.json
+service-account*.json
+
+# Build artifacts
+build/
+.build/
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Swift Package Manager
+Packages/
+*.xcodeproj/
+Package.resolved
