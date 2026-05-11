@@ -20,12 +20,15 @@
     }
     .container { max-width: 400px; text-align: center; }
     .potato {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto 20px;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 28px;
       transition: opacity 0.5s;
     }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    @media (max-width: 480px) {
+      .potato { width: 180px; height: 180px; }
+    }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
     .mode-label {
       font-size: 14px;
       color: #e8833a;
