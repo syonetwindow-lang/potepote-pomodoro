@@ -244,7 +244,7 @@
 
     function scheduleSneak() {
       if (!running || isBreak) return;
-      const delay = (150 + Math.random() * 60) * 1000;
+      const delay = 30 * 60 * 1000;
       sneakTimer = setTimeout(() => {
         if (!running || isBreak) return;
         const img = sneakImages[Math.floor(Math.random() * sneakImages.length)];
@@ -254,7 +254,7 @@
           potatoEl.src = currentWorkImage;
           potatoEl.style.opacity = '1';
           scheduleSneak();
-        }, 30000);
+        }, 5 * 60 * 1000);
       }, delay);
     }
 
