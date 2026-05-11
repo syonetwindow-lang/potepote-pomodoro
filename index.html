@@ -22,11 +22,17 @@
     .potato {
       width: 240px;
       height: 240px;
-      margin: 0 auto 28px;
+      margin: 0 auto 8px;
       transition: opacity 0.5s;
     }
     @media (max-width: 480px) {
       .potato { width: 180px; height: 180px; }
+    }
+    .comment {
+      font-size: 14px;
+      color: #888;
+      min-height: 20px;
+      margin-bottom: 12px;
     }
     h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
     .mode-label {
@@ -35,6 +41,12 @@
       font-weight: 600;
       margin-bottom: 24px;
       min-height: 20px;
+    }
+    .session-info {
+      font-size: 12px;
+      color: #bbb;
+      margin-bottom: 8px;
+      min-height: 16px;
     }
     .timer {
       font-size: 72px;
@@ -55,15 +67,9 @@
       transition: background 0.2s, transform 0.1s;
     }
     .btn:active { transform: scale(0.96); }
-    .btn-start {
-      background: #e8833a;
-      color: #fff;
-    }
+    .btn-start { background: #e8833a; color: #fff; }
     .btn-start:hover { background: #d4722e; }
-    .btn-reset {
-      background: #eee;
-      color: #666;
-    }
+    .btn-reset { background: #eee; color: #666; }
     .btn-reset:hover { background: #ddd; }
     .settings {
       display: flex;
@@ -112,8 +118,10 @@
 <body>
   <div class="container">
     <img id="potato" src="work_normal.png" alt="ぽてぽて" class="potato">
+    <p id="comment" class="comment"></p>
     <h1>ぽてぽてポモドーロ</h1>
     <p id="modeLabel" class="mode-label"></p>
+    <p id="sessionInfo" class="session-info"></p>
 
     <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
     <div id="timer" class="timer">50:00</div>
@@ -130,7 +138,7 @@
     </div>
 
     <div class="controls">
-      <button id="startBtn" class="btn btn-start">スタート</button>
+      <button id="startBtn" class="btn btn-start">はじめる</button>
       <button id="resetBtn" class="btn btn-reset">リセット</button>
     </div>
 
@@ -147,6 +155,8 @@
     const progressEl = $('progress');
     const potatoEl = $('potato');
     const modeLabel = $('modeLabel');
+    const commentEl = $('comment');
+    const sessionInfo = $('sessionInfo');
     const settingsArea = $('settingsArea');
     const workMinInput = $('workMin');
     const breakMinInput = $('breakMin');
@@ -157,6 +167,7 @@
     let interval = null;
     let isBreak = false;
     let potatoState = 0;
+    let sessions = 0;
     const workImages = ['work_normal.png', 'work_glasses.png'];
 
     function fmt(s) {
@@ -169,52 +180,81 @@
       timerEl.textContent = fmt(remaining);
       const pct = ((total - remaining) / total) * 100;
       progressEl.style.width = pct + '%';
-      if (isBreak) {
-        progressEl.classList.add('break-mode');
-      } else {
-        progressEl.classList.remove('break-mode');
-      }
+      progressEl.classList.toggle('break-mode', isBreak);
+      sessionInfo.textContent = sessions > 0 ? sessions + 'かい がんばった' : '';
     }
 
-    function playBeep() {
+    // 足音（Tink風）
+    function playFootstep() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = isBreak ? 523 : 440;
-        gain.gain.value = 0.3;
-        osc.start();
-        osc.stop(ctx.currentTime + 0.5);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 1200;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.start(); osc.stop(ctx.currentTime + 0.1);
+      } catch(e) {}
+    }
+
+    // アラーム（Hero + Glass風）
+    function playAlarm() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // Hero風
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1); gain1.connect(ctx.destination);
+        osc1.frequency.value = 784;
+        osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc1.start(); osc1.stop(ctx.currentTime + 0.6);
+        // Glass風（遅延）
+        setTimeout(() => {
+          const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
+          const osc2 = ctx2.createOscillator();
+          const gain2 = ctx2.createGain();
+          osc2.connect(gain2); gain2.connect(ctx2.destination);
+          osc2.frequency.value = 1568;
+          osc2.type = 'sine';
+          gain2.gain.setValueAtTime(0.2, ctx2.currentTime);
+          gain2.gain.exponentialRampToValueAtTime(0.001, ctx2.currentTime + 0.8);
+          osc2.start(); osc2.stop(ctx2.currentTime + 0.8);
+        }, 800);
       } catch(e) {}
     }
 
     function switchMode() {
       isBreak = !isBreak;
       if (isBreak) {
+        sessions++;
         total = parseInt(breakMinInput.value) * 60;
         potatoEl.src = 'break_relax.png';
-        modeLabel.textContent = '休憩中';
+        modeLabel.textContent = 'きゅうけいタイム';
         modeLabel.style.color = '#5bb35b';
+        commentEl.textContent = 'おつかれさま。' + breakMinInput.value + 'ふんの きゅうけいタイムだよ';
       } else {
         total = parseInt(workMinInput.value) * 60;
         potatoState = (potatoState + 1) % workImages.length;
         potatoEl.src = workImages[potatoState];
-        modeLabel.textContent = '作業中';
+        modeLabel.textContent = 'さぎょうタイム';
         modeLabel.style.color = '#e8833a';
+        commentEl.textContent = 'きゅうけい おわり。つぎも がんばろう';
       }
       remaining = total;
+      playAlarm();
       updateDisplay();
     }
 
     function tick() {
       remaining--;
       if (remaining <= 5 && remaining > 0) {
-        playBeep();
+        playFootstep();
       }
       if (remaining <= 0) {
-        playBeep();
         switchMode();
       }
       updateDisplay();
@@ -224,7 +264,8 @@
       if (running) {
         clearInterval(interval);
         running = false;
-        startBtn.textContent = '再開';
+        startBtn.textContent = 'つづける';
+        commentEl.textContent = '';
         settingsArea.style.display = 'flex';
       } else {
         if (!isBreak && remaining === total) {
@@ -232,9 +273,12 @@
           remaining = total;
         }
         running = true;
-        startBtn.textContent = '一時停止';
-        modeLabel.textContent = isBreak ? '休憩中' : '作業中';
-        modeLabel.style.color = isBreak ? '#5bb35b' : '#e8833a';
+        startBtn.textContent = 'とめる';
+        if (!isBreak) {
+          modeLabel.textContent = 'さぎょうタイム';
+          modeLabel.style.color = '#e8833a';
+          commentEl.textContent = sessions === 0 ? 'がんばろう' : 'もうひとがんばり';
+        }
         settingsArea.style.display = 'none';
         interval = setInterval(tick, 1000);
       }
@@ -244,12 +288,14 @@
       clearInterval(interval);
       running = false;
       isBreak = false;
+      sessions = 0;
       total = parseInt(workMinInput.value) * 60;
       remaining = total;
       potatoState = 0;
       potatoEl.src = workImages[0];
-      startBtn.textContent = 'スタート';
+      startBtn.textContent = 'はじめる';
       modeLabel.textContent = '';
+      commentEl.textContent = '';
       settingsArea.style.display = 'flex';
       updateDisplay();
     });
