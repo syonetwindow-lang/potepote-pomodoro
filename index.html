@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ぽてぽてポモドーロ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+      background: #faf8f5;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    .container { max-width: 560px; text-align: center; }
+    .icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 32px;
+    }
+    .features {
+      text-align: left;
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .features li {
+      list-style: none;
+      padding: 8px 0;
+      font-size: 15px;
+      border-bottom: 1px solid #f0eeeb;
+    }
+    .features li:last-child { border-bottom: none; }
+    .features li::before {
+      content: "🥔 ";
+    }
+    .download-btn {
+      display: inline-block;
+      background: #e8833a;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 16px 48px;
+      border-radius: 12px;
+      transition: background 0.2s;
+      margin-bottom: 12px;
+    }
+    .download-btn:hover { background: #d4722e; }
+    .download-sub {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 32px;
+    }
+    .setup {
+      text-align: left;
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .setup h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .setup ol {
+      padding-left: 20px;
+      font-size: 14px;
+      line-height: 2;
+      color: #555;
+    }
+    footer {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 20px;
+    }
+    footer a { color: #bbb; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="icon.png" alt="ぽてぽてポモドーロ" class="icon">
+    <h1>ぽてぽてポモドーロ</h1>
+    <p class="tagline">ぽてぽてと一緒に集中できるポモドーロタイマー</p>
+
+    <ul class="features">
+      <li>50分作業 / 10分休憩（設定で変更可能）</li>
+      <li>ターンごとにぽてぽてが切り替わる</li>
+      <li>終了5秒前に足音、終了時にアラーム</li>
+      <li>macOS専用・無料</li>
+    </ul>
+
+    <a class="download-btn" href="https://github.com/syonetwindow-lang/potepote-pomodoro/releases/download/v1.0/potepote-pomodoro-v1.0.dmg">
+      ダウンロード（Mac）
+    </a>
+    <p class="download-sub">macOS 12 Monterey 以降対応 / 181 KB</p>
+
+    <div class="setup">
+      <h2>インストール方法</h2>
+      <ol>
+        <li>DMGファイルをダウンロード</li>
+        <li>ダブルクリックで開く</li>
+        <li>アプリを右クリック →「開く」を選択</li>
+        <li>「開発元が未確認」と出たら「開く」をクリック</li>
+      </ol>
+    </div>
+
+    <footer>
+      <a href="https://github.com/syonetwindow-lang/potepote-pomodoro">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
