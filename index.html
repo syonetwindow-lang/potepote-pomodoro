@@ -14,119 +14,252 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px 20px;
+      justify-content: center;
+      padding: 40px 20px;
+      user-select: none;
     }
-    .container { max-width: 560px; text-align: center; }
-    .icon {
-      width: 120px;
-      height: 120px;
-      border-radius: 24px;
+    .container { max-width: 400px; text-align: center; }
+    .potato {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 20px;
+      transition: opacity 0.5s;
+    }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .mode-label {
+      font-size: 14px;
+      color: #e8833a;
+      font-weight: 600;
       margin-bottom: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      min-height: 20px;
     }
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .timer {
+      font-size: 72px;
+      font-weight: 200;
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 32px;
+      color: #222;
     }
-    .tagline {
+    .controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
+    .btn {
+      border: none;
+      border-radius: 12px;
       font-size: 16px;
-      color: #888;
-      margin-bottom: 32px;
+      font-weight: 600;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
     }
-    .features {
-      text-align: left;
-      background: #fff;
-      border-radius: 16px;
-      padding: 24px 28px;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .features li {
-      list-style: none;
-      padding: 8px 0;
-      font-size: 15px;
-      border-bottom: 1px solid #f0eeeb;
-    }
-    .features li:last-child { border-bottom: none; }
-    .features li::before {
-      content: "🥔 ";
-    }
-    .download-btn {
-      display: inline-block;
+    .btn:active { transform: scale(0.96); }
+    .btn-start {
       background: #e8833a;
       color: #fff;
-      text-decoration: none;
-      font-size: 18px;
-      font-weight: 600;
-      padding: 16px 48px;
-      border-radius: 12px;
-      transition: background 0.2s;
-      margin-bottom: 12px;
     }
-    .download-btn:hover { background: #d4722e; }
-    .download-sub {
+    .btn-start:hover { background: #d4722e; }
+    .btn-reset {
+      background: #eee;
+      color: #666;
+    }
+    .btn-reset:hover { background: #ddd; }
+    .settings {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .setting-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 13px;
-      color: #aaa;
-      margin-bottom: 32px;
+      color: #888;
     }
-    .setup {
-      text-align: left;
-      background: #fff;
-      border-radius: 16px;
-      padding: 24px 28px;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .setup h2 {
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-    .setup ol {
-      padding-left: 20px;
+    .setting-group input {
+      width: 48px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 6px;
       font-size: 14px;
-      line-height: 2;
-      color: #555;
+      font-family: inherit;
     }
-    footer {
-      font-size: 12px;
-      color: #bbb;
-      margin-top: 20px;
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #eee;
+      border-radius: 3px;
+      margin-bottom: 24px;
+      overflow: hidden;
     }
-    footer a { color: #bbb; }
+    .progress-fill {
+      height: 100%;
+      background: #e8833a;
+      border-radius: 3px;
+      transition: width 1s linear;
+      width: 0%;
+    }
+    .progress-fill.break-mode { background: #5bb35b; }
+    footer { font-size: 11px; color: #ccc; margin-top: 12px; }
+    footer a { color: #ccc; text-decoration: none; }
+    footer a:hover { color: #999; }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="icon.png" alt="ぽてぽてポモドーロ" class="icon">
+    <img id="potato" src="work_normal.png" alt="ぽてぽて" class="potato">
     <h1>ぽてぽてポモドーロ</h1>
-    <p class="tagline">ぽてぽてと一緒に集中できるポモドーロタイマー</p>
+    <p id="modeLabel" class="mode-label"></p>
 
-    <ul class="features">
-      <li>50分作業 / 10分休憩（設定で変更可能）</li>
-      <li>ターンごとにぽてぽてが切り替わる</li>
-      <li>終了5秒前に足音、終了時にアラーム</li>
-      <li>macOS専用・無料</li>
-    </ul>
+    <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+    <div id="timer" class="timer">50:00</div>
 
-    <a class="download-btn" href="https://github.com/syonetwindow-lang/potepote-pomodoro/releases/download/v1.0/potepote-pomodoro-v1.0.dmg">
-      ダウンロード（Mac）
-    </a>
-    <p class="download-sub">macOS 12 Monterey 以降対応 / 181 KB</p>
+    <div class="settings" id="settingsArea">
+      <div class="setting-group">
+        <label for="workMin">作業</label>
+        <input id="workMin" type="number" value="50" min="1" max="120">分
+      </div>
+      <div class="setting-group">
+        <label for="breakMin">休憩</label>
+        <input id="breakMin" type="number" value="10" min="1" max="60">分
+      </div>
+    </div>
 
-    <div class="setup">
-      <h2>インストール方法</h2>
-      <ol>
-        <li>DMGファイルをダウンロード</li>
-        <li>ダブルクリックで開く</li>
-        <li>アプリを右クリック →「開く」を選択</li>
-        <li>「開発元が未確認」と出たら「開く」をクリック</li>
-      </ol>
+    <div class="controls">
+      <button id="startBtn" class="btn btn-start">スタート</button>
+      <button id="resetBtn" class="btn btn-reset">リセット</button>
     </div>
 
     <footer>
       <a href="https://github.com/syonetwindow-lang/potepote-pomodoro">GitHub</a>
     </footer>
   </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const timerEl = $('timer');
+    const startBtn = $('startBtn');
+    const resetBtn = $('resetBtn');
+    const progressEl = $('progress');
+    const potatoEl = $('potato');
+    const modeLabel = $('modeLabel');
+    const settingsArea = $('settingsArea');
+    const workMinInput = $('workMin');
+    const breakMinInput = $('breakMin');
+
+    let remaining = 50 * 60;
+    let total = 50 * 60;
+    let running = false;
+    let interval = null;
+    let isBreak = false;
+    let potatoState = 0;
+    const workImages = ['work_normal.png', 'work_glasses.png'];
+
+    function fmt(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+    }
+
+    function updateDisplay() {
+      timerEl.textContent = fmt(remaining);
+      const pct = ((total - remaining) / total) * 100;
+      progressEl.style.width = pct + '%';
+      if (isBreak) {
+        progressEl.classList.add('break-mode');
+      } else {
+        progressEl.classList.remove('break-mode');
+      }
+    }
+
+    function playBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = isBreak ? 523 : 440;
+        gain.gain.value = 0.3;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+      } catch(e) {}
+    }
+
+    function switchMode() {
+      isBreak = !isBreak;
+      if (isBreak) {
+        total = parseInt(breakMinInput.value) * 60;
+        potatoEl.src = 'break_relax.png';
+        modeLabel.textContent = '休憩中';
+        modeLabel.style.color = '#5bb35b';
+      } else {
+        total = parseInt(workMinInput.value) * 60;
+        potatoState = (potatoState + 1) % workImages.length;
+        potatoEl.src = workImages[potatoState];
+        modeLabel.textContent = '作業中';
+        modeLabel.style.color = '#e8833a';
+      }
+      remaining = total;
+      updateDisplay();
+    }
+
+    function tick() {
+      remaining--;
+      if (remaining <= 5 && remaining > 0) {
+        playBeep();
+      }
+      if (remaining <= 0) {
+        playBeep();
+        switchMode();
+      }
+      updateDisplay();
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (running) {
+        clearInterval(interval);
+        running = false;
+        startBtn.textContent = '再開';
+        settingsArea.style.display = 'flex';
+      } else {
+        if (!isBreak && remaining === total) {
+          total = parseInt(workMinInput.value) * 60;
+          remaining = total;
+        }
+        running = true;
+        startBtn.textContent = '一時停止';
+        modeLabel.textContent = isBreak ? '休憩中' : '作業中';
+        modeLabel.style.color = isBreak ? '#5bb35b' : '#e8833a';
+        settingsArea.style.display = 'none';
+        interval = setInterval(tick, 1000);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearInterval(interval);
+      running = false;
+      isBreak = false;
+      total = parseInt(workMinInput.value) * 60;
+      remaining = total;
+      potatoState = 0;
+      potatoEl.src = workImages[0];
+      startBtn.textContent = 'スタート';
+      modeLabel.textContent = '';
+      settingsArea.style.display = 'flex';
+      updateDisplay();
+    });
+
+    workMinInput.addEventListener('change', () => {
+      if (!running && !isBreak) {
+        total = parseInt(workMinInput.value) * 60;
+        remaining = total;
+        updateDisplay();
+      }
+    });
+
+    updateDisplay();
+  </script>
 </body>
 </html>
