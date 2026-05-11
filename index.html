@@ -174,9 +174,9 @@
     let isBreak = false;
     let potatoState = 0;
     let sessions = 0;
-    const workImages = ['work_normal.png', 'work_glasses.png', 'work_glasses2.png'];
-    const breakImages = ['break_relax.png', 'break_sofa.png'];
-    const sneakImages = ['break_relax.png', 'break_sofa.png'];
+    const workImages = ['work_normal.png', 'work_glasses2.png', 'work_glasses.png'];
+    const breakImages = ['break_sofa.png', 'break_relax.png'];
+    const sneakImages = ['break_sofa.png', 'break_relax.png'];
     let breakState = 0;
     let sneakTimer = null;
     let currentWorkImage = 'work_normal.png';
@@ -244,7 +244,7 @@
 
     function scheduleSneak() {
       if (!running || isBreak) return;
-      const delay = (60 + Math.random() * 120) * 1000;
+      const delay = (150 + Math.random() * 60) * 1000;
       sneakTimer = setTimeout(() => {
         if (!running || isBreak) return;
         const img = sneakImages[Math.floor(Math.random() * sneakImages.length)];
@@ -254,7 +254,7 @@
           potatoEl.src = currentWorkImage;
           potatoEl.style.opacity = '1';
           scheduleSneak();
-        }, 3000);
+        }, 30000);
       }, delay);
     }
 
