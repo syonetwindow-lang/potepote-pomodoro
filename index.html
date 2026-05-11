@@ -174,7 +174,12 @@
     let isBreak = false;
     let potatoState = 0;
     let sessions = 0;
-    const workImages = ['work_normal.png', 'work_glasses.png'];
+    const workImages = ['work_normal.png', 'work_glasses.png', 'work_glasses2.png'];
+    const breakImages = ['break_relax.png', 'break_sofa.png'];
+    const sneakImages = ['break_relax.png', 'break_sofa.png'];
+    let breakState = 0;
+    let sneakTimer = null;
+    let currentWorkImage = 'work_normal.png';
 
     function fmt(s) {
       const m = Math.floor(s / 60);
@@ -233,22 +238,48 @@
       } catch(e) {}
     }
 
+    function stopSneak() {
+      if (sneakTimer) { clearTimeout(sneakTimer); sneakTimer = null; }
+    }
+
+    function scheduleSneak() {
+      if (!running || isBreak) return;
+      const delay = (60 + Math.random() * 120) * 1000;
+      sneakTimer = setTimeout(() => {
+        if (!running || isBreak) return;
+        const img = sneakImages[Math.floor(Math.random() * sneakImages.length)];
+        potatoEl.src = img;
+        potatoEl.style.opacity = '0.7';
+        setTimeout(() => {
+          potatoEl.src = currentWorkImage;
+          potatoEl.style.opacity = '1';
+          scheduleSneak();
+        }, 3000);
+      }, delay);
+    }
+
     function switchMode() {
+      stopSneak();
       isBreak = !isBreak;
       if (isBreak) {
         sessions++;
         total = parseInt(breakMinInput.value) * 60;
-        potatoEl.src = 'break_relax.png';
+        breakState = (breakState + 1) % breakImages.length;
+        potatoEl.src = breakImages[breakState];
+        potatoEl.style.opacity = '1';
         modeLabel.textContent = 'きゅうけいタイム';
         modeLabel.style.color = '#5bb35b';
         commentEl.textContent = 'おつかれさま。' + breakMinInput.value + 'ふんの きゅうけいタイムだよ';
       } else {
         total = parseInt(workMinInput.value) * 60;
         potatoState = (potatoState + 1) % workImages.length;
-        potatoEl.src = workImages[potatoState];
+        currentWorkImage = workImages[potatoState];
+        potatoEl.src = currentWorkImage;
+        potatoEl.style.opacity = '1';
         modeLabel.textContent = 'さぎょうタイム';
         modeLabel.style.color = '#e8833a';
         commentEl.textContent = 'きゅうけい おわり。つぎも がんばろう';
+        scheduleSneak();
       }
       remaining = total;
       playAlarm();
@@ -269,9 +300,12 @@
     startBtn.addEventListener('click', () => {
       if (running) {
         clearInterval(interval);
+        stopSneak();
         running = false;
         startBtn.textContent = 'つづける';
         commentEl.textContent = '';
+        potatoEl.style.opacity = '1';
+        if (!isBreak) potatoEl.src = currentWorkImage;
         settingsArea.style.display = 'flex';
       } else {
         if (!isBreak && remaining === total) {
@@ -284,6 +318,7 @@
           modeLabel.textContent = 'さぎょうタイム';
           modeLabel.style.color = '#e8833a';
           commentEl.textContent = sessions === 0 ? 'がんばろう' : 'もうひとがんばり';
+          scheduleSneak();
         }
         settingsArea.style.display = 'none';
         interval = setInterval(tick, 1000);
@@ -297,8 +332,11 @@
       sessions = 0;
       total = parseInt(workMinInput.value) * 60;
       remaining = total;
+      stopSneak();
       potatoState = 0;
-      potatoEl.src = workImages[0];
+      currentWorkImage = workImages[0];
+      potatoEl.src = currentWorkImage;
+      potatoEl.style.opacity = '1';
       startBtn.textContent = 'はじめる';
       modeLabel.textContent = '';
       commentEl.textContent = '';
