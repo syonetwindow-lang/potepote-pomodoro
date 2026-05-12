@@ -104,21 +104,25 @@
     }
     .progress-bar {
       width: 100%;
-      height: 24px;
+      height: 28px;
       margin-bottom: 24px;
       display: flex;
       align-items: center;
-      gap: 2px;
+      justify-content: center;
+      gap: 12px;
     }
+    .progress-bar.hidden { visibility: hidden; }
     .paw {
-      font-size: 16px;
-      opacity: 0.15;
-      transition: opacity 0.5s;
-      transform: scaleX(-1);
+      font-size: 22px;
+      opacity: 0;
+      transition: opacity 0.8s, transform 0.5s;
+      transform: scale(0.5);
     }
-    .paw.active { opacity: 1; }
-    .paw:nth-child(odd) { transform: scaleX(-1) rotate(-10deg); }
-    .paw:nth-child(even) { transform: rotate(10deg); }
+    .paw.active { opacity: 1; transform: scale(1); }
+    .paw:nth-child(odd) { transform: scale(0.5) rotate(-15deg); }
+    .paw:nth-child(odd).active { transform: scale(1) rotate(-15deg); }
+    .paw:nth-child(even) { transform: scale(0.5) rotate(15deg); }
+    .paw:nth-child(even).active { transform: scale(1) rotate(15deg); }
     footer { font-size: 11px; color: #ccc; margin-top: 12px; }
     footer a { color: #ccc; text-decoration: none; }
     footer a:hover { color: #999; }
@@ -132,7 +136,7 @@
     <p id="modeLabel" class="mode-label"></p>
     <p id="sessionInfo" class="session-info"></p>
 
-    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-bar hidden" id="progressBar"></div>
     <div id="timer" class="timer">50:00</div>
 
     <div class="settings" id="settingsArea">
@@ -148,11 +152,11 @@
 
     <div class="controls">
       <button id="startBtn" class="btn btn-start">はじめる</button>
-      <button id="resetBtn" class="btn btn-reset">リセット</button>
+      <button id="resetBtn" class="btn btn-reset" style="display:none">リセット</button>
     </div>
 
     <footer>
-      <a href="https://github.com/syonetwindow-lang/potepote-pomodoro">GitHub</a>
+      <a href="https://x.com/Potepote_manga">ぽてぽてX（旧Twitter）</a>
     </footer>
   </div>
 
@@ -162,7 +166,7 @@
     const startBtn = $('startBtn');
     const resetBtn = $('resetBtn');
     const progressBar = $('progressBar');
-    const PAW_COUNT = 15;
+    const PAW_COUNT = 5;
     const potatoEl = $('potato');
     const modeLabel = $('modeLabel');
     const commentEl = $('comment');
@@ -329,6 +333,8 @@
         }
         running = true;
         startBtn.textContent = 'とめる';
+        resetBtn.style.display = 'inline-block';
+        progressBar.classList.remove('hidden');
         if (!isBreak) {
           modeLabel.textContent = 'さぎょうタイム';
           modeLabel.style.color = '#e8833a';
@@ -353,6 +359,8 @@
       potatoEl.src = currentWorkImage;
       potatoEl.style.opacity = '1';
       startBtn.textContent = 'はじめる';
+      resetBtn.style.display = 'none';
+      progressBar.classList.add('hidden');
       modeLabel.textContent = '';
       commentEl.textContent = '';
       settingsArea.style.display = 'flex';
