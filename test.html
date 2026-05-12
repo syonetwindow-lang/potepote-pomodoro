@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#e8833a">
+  <link rel="apple-touch-icon" href="favicon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+  <title>ぽてぽてポモドーロ</title>
+  <style>
+    @font-face {
+      font-family: 'KeiFont';
+      src: url('keifont.ttf') format('truetype');
+      font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'KeiFont', -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+      background: #faf8f5;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      user-select: none;
+    }
+    .container { max-width: 500px; text-align: center; }
+    .potato {
+      width: 300px;
+      height: 300px;
+      margin: 0 auto 16px;
+      transition: opacity 0.5s;
+    }
+    @media (max-width: 480px) {
+      body { padding: 4px 16px; }
+      .potato { width: 180px; height: 180px; margin-bottom: 12px; }
+      h1 { font-size: 22px; margin-top: 0; margin-bottom: 4px; }
+      .mode-label { margin-top: 2px; margin-bottom: 6px; min-height: 16px; }
+      .session-info { margin-bottom: 2px; min-height: 12px; }
+      .timer { font-size: 60px; margin-bottom: 8px; }
+      .progress-bar { margin-bottom: 8px; }
+      .settings { margin-bottom: 8px; }
+      .controls { margin-bottom: 8px; }
+      .btn { padding: 12px 28px; font-size: 18px; }
+    }
+    .comment {
+      font-size: 18px;
+      color: #888;
+      min-height: 26px;
+      margin-bottom: 2px;
+    }
+    .comment:empty::before {
+      content: '\00a0';
+    }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 2px; margin-top: 0; }
+    .mode-label {
+      font-size: 20px;
+      color: #e8833a;
+      font-weight: 600;
+      margin-bottom: 12px;
+      min-height: 26px;
+    }
+    .session-info {
+      font-size: 12px;
+      color: #bbb;
+      margin-bottom: 8px;
+      min-height: 16px;
+    }
+    .timer {
+      font-family: 'KeiFont', sans-serif;
+      font-size: 90px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    .controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
+    .btn {
+      border: none;
+      border-radius: 14px;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 16px 40px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-start { background: #e8833a; color: #fff; }
+    .btn-start:hover { background: #d4722e; }
+    .btn-reset { background: #eee; color: #666; }
+    .btn-reset:hover { background: #ddd; }
+    .settings {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .setting-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #888;
+    }
+    .setting-group input {
+      width: 64px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 20px;
+      font-family: inherit;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 28px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .progress-bar.hidden { visibility: hidden; }
+    .paw {
+      font-size: 32px;
+      opacity: 0.2;
+      transform: rotate(-15deg);
+      transition: opacity 0.3s;
+    }
+    .paw.active {
+      opacity: 1;
+      animation: pawPop 0.4s ease-out;
+    }
+    .paw:nth-child(even) { transform: rotate(15deg); }
+    @keyframes pawPop {
+      0% { opacity: 0.2; transform: scale(0.5) rotate(-15deg); }
+      50% { opacity: 1; transform: scale(1.3) rotate(-10deg); }
+      100% { opacity: 1; transform: scale(1) rotate(-15deg); }
+    }
+    .paw:nth-child(even).active {
+      animation: pawPopEven 0.4s ease-out;
+    }
+    @keyframes pawPopEven {
+      0% { opacity: 0.2; transform: scale(0.5) rotate(15deg); }
+      50% { opacity: 1; transform: scale(1.3) rotate(10deg); }
+      100% { opacity: 1; transform: scale(1) rotate(15deg); }
+    }
+    .share-area {
+      display: none;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .share-btn {
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+    .share-btn:hover { opacity: 0.85; }
+    .share-x { background: #000; }
+    .share-libe { background: #22c55e; }
+    footer { font-size: 11px; color: #ccc; margin-top: 12px; }
+    footer a { color: #ccc; text-decoration: none; }
+    footer a:hover { color: #999; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p id="comment" class="comment"></p>
+    <img id="potato" src="work_normal.png" alt="ぽてぽて" class="potato">
+    <h1>ぽてぽてポモドーロ</h1>
+    <p id="modeLabel" class="mode-label"></p>
+    <p id="sessionInfo" class="session-info"></p>
+
+    <div class="progress-bar hidden" id="progressBar"></div>
+    <div id="timer" class="timer">50:00</div>
+
+    <div class="settings" id="settingsArea">
+      <div class="setting-group">
+        <label for="workMin">もくもく</label>
+        <input id="workMin" type="number" value="50" min="1" max="120">分
+      </div>
+      <div class="setting-group">
+        <label for="breakMin">休憩</label>
+        <input id="breakMin" type="number" value="10" min="1" max="60">分
+      </div>
+    </div>
+    <div class="controls">
+      <button id="startBtn" class="btn btn-start">はじめる</button>
+      <button id="resetBtn" class="btn btn-reset" style="display:none">リセット</button>
+    </div>
+
+    <div class="share-area" id="shareArea">
+      <a id="shareX" class="share-btn share-x" target="_blank" rel="noopener">Xでシェア</a>
+      <a id="shareLibe" class="share-btn share-libe" target="_blank" rel="noopener">リベでつぶやく</a>
+    </div>
+
+    <footer>
+      <a href="https://x.com/Potepote_manga">ぽてぽてX（旧Twitter）</a>
+    </footer>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const timerEl = $('timer');
+    const startBtn = $('startBtn');
+    const resetBtn = $('resetBtn');
+    const progressBar = $('progressBar');
+    const PAW_COUNT = 5;
+    const potatoEl = $('potato');
+    const modeLabel = $('modeLabel');
+    const commentEl = $('comment');
+    const sessionInfo = $('sessionInfo');
+    const settingsArea = $('settingsArea');
+    const workMinInput = $('workMin');
+    const breakMinInput = $('breakMin');
+
+    let remaining = 50 * 60;
+    let total = 50 * 60;
+    let running = false;
+    let interval = null;
+    let isBreak = false;
+    let potatoState = 0;
+    let sessions = 0;
+    const workImages = ['work_normal.png', 'work_glasses2.png', 'work_glasses.png'];
+    const breakImages = ['break_sofa.png', 'break_relax.png'];
+    const sneakImages = ['work_away.png', 'break_relax.png'];
+    let breakState = 0;
+    let sneakTimer = null;
+    let currentWorkImage = 'work_normal.png';
+    const shareArea = $('shareArea');
+    const shareX = $('shareX');
+    const shareLibe = $('shareLibe');
+    const appURL = 'https://syonetwindow-lang.github.io/potepote-pomodoro/';
+
+    function updateShareLinks() {
+      const text = sessions + 'かい がんばった！🐾 #ぽてぽてポモドーロ';
+      shareX.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text + '\n' + appURL);
+      shareLibe.href = 'https://libecity.com/tweet/all?isFollowingUserOnly=false&hideReply=false';
+    }
+
+    function fmt(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+    }
+
+    function initPaws() {
+      progressBar.innerHTML = '';
+      for (let i = 0; i < PAW_COUNT; i++) {
+        const span = document.createElement('span');
+        span.className = 'paw';
+        span.textContent = '\uD83D\uDC3E';
+        progressBar.appendChild(span);
+      }
+    }
+
+    function updateDisplay() {
+      timerEl.textContent = fmt(remaining);
+      const pct = (total - remaining) / total;
+      const activePaws = Math.floor(pct * PAW_COUNT);
+      const paws = progressBar.querySelectorAll('.paw');
+      paws.forEach((p, i) => p.classList.toggle('active', i < activePaws));
+      sessionInfo.textContent = sessions > 0 ? sessions + 'かい がんばった' : '';
+      if (sessions > 0) {
+        shareArea.style.display = 'flex';
+        updateShareLinks();
+      } else {
+        shareArea.style.display = 'none';
+      }
+      if (running) {
+        document.title = fmt(remaining) + (isBreak ? ' きゅうけい' : ' もくもく') + ' - ぽてぽてポモドーロ';
+      } else {
+        document.title = 'ぽてぽてポモドーロ';
+      }
+    }
+
+    // 足音（Tink風）
+    function playFootstep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 1200;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.start(); osc.stop(ctx.currentTime + 0.1);
+      } catch(e) {}
+    }
+
+    // アラーム（Hero + Glass風）
+    function playAlarm() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // Hero風
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1); gain1.connect(ctx.destination);
+        osc1.frequency.value = 784;
+        osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc1.start(); osc1.stop(ctx.currentTime + 0.6);
+        // Glass風（遅延）
+        setTimeout(() => {
+          const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
+          const osc2 = ctx2.createOscillator();
+          const gain2 = ctx2.createGain();
+          osc2.connect(gain2); gain2.connect(ctx2.destination);
+          osc2.frequency.value = 1568;
+          osc2.type = 'sine';
+          gain2.gain.setValueAtTime(0.2, ctx2.currentTime);
+          gain2.gain.exponentialRampToValueAtTime(0.001, ctx2.currentTime + 0.8);
+          osc2.start(); osc2.stop(ctx2.currentTime + 0.8);
+        }, 800);
+      } catch(e) {}
+    }
+
+    function stopSneak() {
+      if (sneakTimer) { clearTimeout(sneakTimer); sneakTimer = null; }
+    }
+
+    function scheduleSneak() {
+      if (!running || isBreak) return;
+      const delay = 10 * 60 * 1000;
+      sneakTimer = setTimeout(() => {
+        if (!running || isBreak) return;
+        const img = sneakImages[Math.floor(Math.random() * sneakImages.length)];
+        potatoEl.src = img;
+        potatoEl.style.opacity = '0.7';
+        setTimeout(() => {
+          potatoEl.src = currentWorkImage;
+          potatoEl.style.opacity = '1';
+          scheduleSneak();
+        }, 3 * 60 * 1000);
+      }, delay);
+    }
+
+    function switchMode() {
+      stopSneak();
+      isBreak = !isBreak;
+      if (isBreak) {
+        sessions++;
+        total = parseInt(breakMinInput.value) * 60;
+        breakState = (breakState + 1) % breakImages.length;
+        potatoEl.src = breakImages[breakState];
+        potatoEl.style.opacity = '1';
+        modeLabel.textContent = 'きゅうけいタイム';
+        modeLabel.style.color = '#5bb35b';
+        commentEl.textContent = 'おつかれさま。きゅうけいタイムだよ';
+      } else {
+        total = parseInt(workMinInput.value) * 60;
+        potatoState = (potatoState + 1) % workImages.length;
+        currentWorkImage = workImages[potatoState];
+        potatoEl.src = currentWorkImage;
+        potatoEl.style.opacity = '1';
+        modeLabel.textContent = 'さぎょうタイム';
+        modeLabel.style.color = '#e8833a';
+        commentEl.textContent = 'きゅうけい おわり。つぎも がんばろう';
+        scheduleSneak();
+      }
+      remaining = total;
+      playAlarm();
+      updateDisplay();
+    }
+
+    function tick() {
+      remaining--;
+      if (remaining <= 5 && remaining > 0) {
+        playFootstep();
+      }
+      if (remaining <= 0) {
+        switchMode();
+      }
+      updateDisplay();
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (running) {
+        clearInterval(interval);
+        stopSneak();
+        running = false;
+        startBtn.textContent = 'つづける';
+        commentEl.textContent = '\u00a0';
+        potatoEl.style.opacity = '1';
+        if (!isBreak) potatoEl.src = currentWorkImage;
+        settingsArea.style.visibility = 'visible';
+      } else {
+        if (!isBreak && remaining === total) {
+          total = parseInt(workMinInput.value) * 60;
+          remaining = total;
+        }
+        running = true;
+        startBtn.textContent = 'とめる';
+        resetBtn.style.display = 'inline-block';
+        progressBar.classList.remove('hidden');
+        if (!isBreak) {
+          modeLabel.textContent = 'さぎょうタイム';
+          modeLabel.style.color = '#e8833a';
+          commentEl.textContent = sessions === 0 ? 'がんばろう' : 'もうひとがんばり';
+          scheduleSneak();
+        }
+        settingsArea.style.visibility = 'hidden';
+        interval = setInterval(tick, 1000);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearInterval(interval);
+      running = false;
+      isBreak = false;
+      sessions = 0;
+      total = parseInt(workMinInput.value) * 60;
+      remaining = total;
+      stopSneak();
+      potatoState = 0;
+      currentWorkImage = workImages[0];
+      potatoEl.src = currentWorkImage;
+      potatoEl.style.opacity = '1';
+      startBtn.textContent = 'はじめる';
+      resetBtn.style.display = 'none';
+      progressBar.classList.add('hidden');
+      modeLabel.textContent = '\u00a0';
+      commentEl.textContent = '';
+      settingsArea.style.visibility = 'visible';
+      updateDisplay();
+    });
+
+    workMinInput.addEventListener('change', () => {
+      if (!running && !isBreak) {
+        total = parseInt(workMinInput.value) * 60;
+        remaining = total;
+        updateDisplay();
+      }
+    });
+
+    initPaws();
+    updateDisplay();
+  </script>
+</body>
+</html>
