@@ -10,11 +10,13 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
   <title>ぽてぽてポモドーロ</title>
   <style>
+    @font-face {
+      font-family: 'KeiFont';
+      src: url('keifont.ttf') format('truetype');
+      font-display: swap;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
@@ -59,7 +61,7 @@
       min-height: 16px;
     }
     .timer {
-      font-family: 'Kosugi Maru', sans-serif;
+      font-family: 'KeiFont', sans-serif;
       font-size: 72px;
       font-weight: 400;
       letter-spacing: 2px;
