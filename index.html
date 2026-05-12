@@ -40,8 +40,8 @@
     @media (max-width: 480px) {
       body { padding: 4px 16px; }
       .potato { width: 180px; height: 180px; margin-bottom: -8px; }
-      h1 { font-size: 22px; margin-bottom: 0; }
-      .mode-label { margin-bottom: 4px; min-height: 16px; }
+      h1 { font-size: 22px; margin-top: 8px; margin-bottom: 4px; }
+      .mode-label { margin-top: 4px; margin-bottom: 6px; min-height: 16px; }
       .session-info { margin-bottom: 2px; min-height: 12px; }
       .timer { font-size: 60px; margin-bottom: 8px; }
       .progress-bar { margin-bottom: 8px; }
@@ -50,9 +50,9 @@
       .btn { padding: 12px 28px; font-size: 18px; }
     }
     .comment {
-      font-size: 14px;
+      font-size: 18px;
       color: #888;
-      min-height: 22px;
+      min-height: 26px;
       margin-bottom: 2px;
     }
     .comment:empty::before {
@@ -60,11 +60,11 @@
     }
     h1 { font-size: 26px; font-weight: 700; margin-bottom: 2px; margin-top: 0; }
     .mode-label {
-      font-size: 14px;
+      font-size: 20px;
       color: #e8833a;
       font-weight: 600;
       margin-bottom: 12px;
-      min-height: 20px;
+      min-height: 26px;
     }
     .session-info {
       font-size: 12px;
@@ -315,7 +315,7 @@
         potatoEl.style.opacity = '1';
         modeLabel.textContent = 'きゅうけいタイム';
         modeLabel.style.color = '#5bb35b';
-        commentEl.textContent = 'おつかれさま。' + breakMinInput.value + 'ふんの きゅうけいタイムだよ';
+        commentEl.textContent = 'おつかれさま。きゅうけいタイムだよ';
       } else {
         total = parseInt(workMinInput.value) * 60;
         potatoState = (potatoState + 1) % workImages.length;
