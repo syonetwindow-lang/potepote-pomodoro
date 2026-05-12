@@ -88,35 +88,37 @@
     .setting-group {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 600;
       color: #888;
     }
     .setting-group input {
-      width: 48px;
+      width: 64px;
       text-align: center;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 6px;
-      font-size: 14px;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 20px;
       font-family: inherit;
     }
     .progress-bar {
       width: 100%;
-      height: 6px;
-      background: #eee;
-      border-radius: 3px;
+      height: 24px;
       margin-bottom: 24px;
-      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
-    .progress-fill {
-      height: 100%;
-      background: #e8833a;
-      border-radius: 3px;
-      transition: width 1s linear;
-      width: 0%;
+    .paw {
+      font-size: 16px;
+      opacity: 0.15;
+      transition: opacity 0.5s;
+      transform: scaleX(-1);
     }
-    .progress-fill.break-mode { background: #5bb35b; }
+    .paw.active { opacity: 1; }
+    .paw:nth-child(odd) { transform: scaleX(-1) rotate(-10deg); }
+    .paw:nth-child(even) { transform: rotate(10deg); }
     footer { font-size: 11px; color: #ccc; margin-top: 12px; }
     footer a { color: #ccc; text-decoration: none; }
     footer a:hover { color: #999; }
@@ -130,12 +132,12 @@
     <p id="modeLabel" class="mode-label"></p>
     <p id="sessionInfo" class="session-info"></p>
 
-    <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+    <div class="progress-bar" id="progressBar"></div>
     <div id="timer" class="timer">50:00</div>
 
     <div class="settings" id="settingsArea">
       <div class="setting-group">
-        <label for="workMin">作業</label>
+        <label for="workMin">もくもく</label>
         <input id="workMin" type="number" value="50" min="1" max="120">分
       </div>
       <div class="setting-group">
@@ -159,7 +161,8 @@
     const timerEl = $('timer');
     const startBtn = $('startBtn');
     const resetBtn = $('resetBtn');
-    const progressEl = $('progress');
+    const progressBar = $('progressBar');
+    const PAW_COUNT = 15;
     const potatoEl = $('potato');
     const modeLabel = $('modeLabel');
     const commentEl = $('comment');
@@ -188,11 +191,22 @@
       return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
     }
 
+    function initPaws() {
+      progressBar.innerHTML = '';
+      for (let i = 0; i < PAW_COUNT; i++) {
+        const span = document.createElement('span');
+        span.className = 'paw';
+        span.textContent = '\uD83D\uDC3E';
+        progressBar.appendChild(span);
+      }
+    }
+
     function updateDisplay() {
       timerEl.textContent = fmt(remaining);
-      const pct = ((total - remaining) / total) * 100;
-      progressEl.style.width = pct + '%';
-      progressEl.classList.toggle('break-mode', isBreak);
+      const pct = (total - remaining) / total;
+      const activePaws = Math.floor(pct * PAW_COUNT);
+      const paws = progressBar.querySelectorAll('.paw');
+      paws.forEach((p, i) => p.classList.toggle('active', i < activePaws));
       sessionInfo.textContent = sessions > 0 ? sessions + 'かい がんばった' : '';
     }
 
@@ -353,6 +367,7 @@
       }
     });
 
+    initPaws();
     updateDisplay();
   </script>
 </body>
