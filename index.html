@@ -174,10 +174,6 @@
         <input id="breakMin" type="number" value="10" min="1" max="60">分
       </div>
     </div>
-    <div class="settings" id="settingsPlaceholder" style="display:none;visibility:hidden">
-      <div class="setting-group">&nbsp;</div>
-    </div>
-
     <div class="controls">
       <button id="startBtn" class="btn btn-start">はじめる</button>
       <button id="resetBtn" class="btn btn-reset" style="display:none">さいかい</button>
@@ -201,7 +197,6 @@
     const sessionInfo = $('sessionInfo');
     const settingsArea = $('settingsArea');
     const workMinInput = $('workMin');
-    const settingsPlaceholder = $('settingsPlaceholder');
     const breakMinInput = $('breakMin');
 
     let remaining = 50 * 60;
@@ -354,8 +349,7 @@
         commentEl.textContent = '';
         potatoEl.style.opacity = '1';
         if (!isBreak) potatoEl.src = currentWorkImage;
-        settingsArea.style.display = 'flex';
-        settingsPlaceholder.style.display = 'none';
+        settingsArea.style.visibility = 'visible';
       } else {
         if (!isBreak && remaining === total) {
           total = parseInt(workMinInput.value) * 60;
@@ -371,8 +365,7 @@
           commentEl.textContent = sessions === 0 ? 'がんばろう' : 'もうひとがんばり';
           scheduleSneak();
         }
-        settingsArea.style.display = 'none';
-        settingsPlaceholder.style.display = 'flex';
+        settingsArea.style.visibility = 'hidden';
         interval = setInterval(tick, 1000);
       }
     });
@@ -394,8 +387,7 @@
       progressBar.classList.add('hidden');
       modeLabel.textContent = '';
       commentEl.textContent = '';
-      settingsArea.style.display = 'flex';
-      settingsPlaceholder.style.display = 'none';
+      settingsArea.style.visibility = 'visible';
       updateDisplay();
     });
 
