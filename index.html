@@ -128,7 +128,7 @@
     }
     .progress-bar.hidden { visibility: hidden; }
     .paw {
-      font-size: 22px;
+      font-size: 32px;
       opacity: 0;
       transform: scale(0) rotate(-15deg);
       transition: none;
@@ -155,8 +155,8 @@
 </head>
 <body>
   <div class="container">
-    <img id="potato" src="work_normal.png" alt="ぽてぽて" class="potato">
     <p id="comment" class="comment"></p>
+    <img id="potato" src="work_normal.png" alt="ぽてぽて" class="potato">
     <h1>ぽてぽてポモドーロ</h1>
     <p id="modeLabel" class="mode-label"></p>
     <p id="sessionInfo" class="session-info"></p>
@@ -173,6 +173,9 @@
         <label for="breakMin">休憩</label>
         <input id="breakMin" type="number" value="10" min="1" max="60">分
       </div>
+    </div>
+    <div class="settings" id="settingsPlaceholder" style="display:none;visibility:hidden">
+      <div class="setting-group">&nbsp;</div>
     </div>
 
     <div class="controls">
@@ -198,6 +201,7 @@
     const sessionInfo = $('sessionInfo');
     const settingsArea = $('settingsArea');
     const workMinInput = $('workMin');
+    const settingsPlaceholder = $('settingsPlaceholder');
     const breakMinInput = $('breakMin');
 
     let remaining = 50 * 60;
@@ -351,6 +355,7 @@
         potatoEl.style.opacity = '1';
         if (!isBreak) potatoEl.src = currentWorkImage;
         settingsArea.style.display = 'flex';
+        settingsPlaceholder.style.display = 'none';
       } else {
         if (!isBreak && remaining === total) {
           total = parseInt(workMinInput.value) * 60;
@@ -367,6 +372,7 @@
           scheduleSneak();
         }
         settingsArea.style.display = 'none';
+        settingsPlaceholder.style.display = 'flex';
         interval = setInterval(tick, 1000);
       }
     });
@@ -389,6 +395,7 @@
       modeLabel.textContent = '';
       commentEl.textContent = '';
       settingsArea.style.display = 'flex';
+      settingsPlaceholder.style.display = 'none';
       updateDisplay();
     });
 
