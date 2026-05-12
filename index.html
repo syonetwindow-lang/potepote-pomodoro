@@ -19,7 +19,7 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+      font-family: 'KeiFont', -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
       background: #faf8f5;
       color: #333;
       min-height: 100vh;
@@ -30,15 +30,15 @@
       padding: 40px 20px;
       user-select: none;
     }
-    .container { max-width: 400px; text-align: center; }
+    .container { max-width: 500px; text-align: center; }
     .potato {
-      width: 240px;
-      height: 240px;
+      width: 300px;
+      height: 300px;
       margin: 0 auto 8px;
       transition: opacity 0.5s;
     }
     @media (max-width: 480px) {
-      .potato { width: 180px; height: 180px; }
+      .potato { width: 220px; height: 220px; }
     }
     .comment {
       font-size: 14px;
@@ -62,9 +62,9 @@
     }
     .timer {
       font-family: 'KeiFont', sans-serif;
-      font-size: 72px;
+      font-size: 90px;
       font-weight: 400;
-      letter-spacing: 2px;
+      letter-spacing: 4px;
       font-variant-numeric: tabular-nums;
       margin-bottom: 32px;
       color: #222;
@@ -72,10 +72,10 @@
     .controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
     .btn {
       border: none;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 14px;
+      font-size: 20px;
       font-weight: 600;
-      padding: 14px 32px;
+      padding: 16px 40px;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
     }
@@ -168,7 +168,7 @@
 
     <div class="controls">
       <button id="startBtn" class="btn btn-start">はじめる</button>
-      <button id="resetBtn" class="btn btn-reset" style="display:none">リセット</button>
+      <button id="resetBtn" class="btn btn-reset" style="display:none">さいかい</button>
     </div>
 
     <footer>
