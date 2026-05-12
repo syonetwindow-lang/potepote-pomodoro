@@ -10,6 +10,9 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
   <title>ぽてぽてポモドーロ</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -56,8 +59,9 @@
       min-height: 16px;
     }
     .timer {
+      font-family: 'Kosugi Maru', sans-serif;
       font-size: 72px;
-      font-weight: 200;
+      font-weight: 400;
       letter-spacing: 2px;
       font-variant-numeric: tabular-nums;
       margin-bottom: 32px;
@@ -115,14 +119,24 @@
     .paw {
       font-size: 22px;
       opacity: 0;
-      transition: opacity 0.8s, transform 0.5s;
-      transform: scale(0.5);
+      transform: scale(0) rotate(-15deg);
+      transition: none;
     }
-    .paw.active { opacity: 1; transform: scale(1); }
-    .paw:nth-child(odd) { transform: scale(0.5) rotate(-15deg); }
-    .paw:nth-child(odd).active { transform: scale(1) rotate(-15deg); }
-    .paw:nth-child(even) { transform: scale(0.5) rotate(15deg); }
-    .paw:nth-child(even).active { transform: scale(1) rotate(15deg); }
+    .paw.active {
+      opacity: 1;
+      transform: scale(1) rotate(-15deg);
+      animation: pawPop 0.4s ease-out;
+    }
+    .paw:nth-child(even) { transform: scale(0) rotate(15deg); }
+    .paw:nth-child(even).active {
+      transform: scale(1) rotate(15deg);
+      animation: pawPop 0.4s ease-out;
+    }
+    @keyframes pawPop {
+      0% { opacity: 0; transform: scale(0) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.4) rotate(-5deg); }
+      100% { opacity: 1; transform: scale(1); }
+    }
     footer { font-size: 11px; color: #ccc; margin-top: 12px; }
     footer a { color: #ccc; text-decoration: none; }
     footer a:hover { color: #999; }
