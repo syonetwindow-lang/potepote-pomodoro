@@ -52,8 +52,11 @@
     .comment {
       font-size: 14px;
       color: #888;
-      min-height: 18px;
-      margin-bottom: 0;
+      min-height: 22px;
+      margin-bottom: 2px;
+    }
+    .comment:empty::before {
+      content: '\00a0';
     }
     h1 { font-size: 26px; font-weight: 700; margin-bottom: 2px; margin-top: 0; }
     .mode-label {
@@ -346,7 +349,7 @@
         stopSneak();
         running = false;
         startBtn.textContent = 'つづける';
-        commentEl.textContent = '';
+        commentEl.textContent = '\u00a0';
         potatoEl.style.opacity = '1';
         if (!isBreak) potatoEl.src = currentWorkImage;
         settingsArea.style.visibility = 'visible';
@@ -385,7 +388,7 @@
       startBtn.textContent = 'はじめる';
       resetBtn.style.display = 'none';
       progressBar.classList.add('hidden');
-      modeLabel.textContent = '';
+      modeLabel.textContent = '\u00a0';
       commentEl.textContent = '';
       settingsArea.style.visibility = 'visible';
       updateDisplay();
