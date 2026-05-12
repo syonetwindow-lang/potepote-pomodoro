@@ -228,7 +228,7 @@
       return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
     }
 
-    const pawSVG = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="80" rx="24" ry="30" fill="currentColor"/><ellipse cx="22" cy="18" rx="7" ry="8" fill="currentColor"/><ellipse cx="36" cy="10" rx="6" ry="8" fill="currentColor"/><ellipse cx="50" cy="7" rx="6" ry="8" fill="currentColor"/><ellipse cx="64" cy="10" rx="6" ry="8" fill="currentColor"/><ellipse cx="78" cy="18" rx="7" ry="8" fill="currentColor"/></svg>`;
+    const pawSVG = `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="M35 50 Q30 85 33 105 Q37 120 50 120 Q63 120 67 105 Q70 85 65 50 Q58 35 50 35 Q42 35 35 50Z" fill="currentColor" rx="5"/><ellipse cx="27" cy="22" rx="8" ry="9" fill="currentColor" transform="rotate(-20,27,22)"/><ellipse cx="40" cy="12" rx="7" ry="9" fill="currentColor" transform="rotate(-8,40,12)"/><ellipse cx="54" cy="9" rx="6.5" ry="8.5" fill="currentColor"/><ellipse cx="66" cy="14" rx="6" ry="8" fill="currentColor" transform="rotate(8,66,14)"/><ellipse cx="76" cy="25" rx="5.5" ry="7.5" fill="currentColor" transform="rotate(18,76,25)"/></svg>`;
 
     function initPaws() {
       progressBar.innerHTML = '';
